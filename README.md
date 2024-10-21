@@ -1,2 +1,2 @@
 # TP2_TDII
-Trabajo Practico N°1: OrgaSmall (Tecnología Digital II: Sistemas de Computación)
+Trabajo Practico N°2: Programación en C (Tecnología Digital II: Sistemas de Computación)
