@@ -1,5 +1,5 @@
 #include "utils.h"
-// EJERCICIO 1
+
 int strLen(char* src) {
     int c = 0;  // Indice y contador de caracteres.
     while (src[c]!=0){ // Iterador
@@ -15,7 +15,7 @@ char* strDup(char* src) {
     // Solicitamos la memoria para el string duplicado.
     char* dupStr = (char*)malloc(sizeof(char)*(longitudStr*2)+1);
 	
-    // Si el string es NULL, devovelmos NULL.
+    // Si el string es NULL, devuelve NULL.
     if(src == NULL) {
 		return NULL; 
 	}
@@ -32,12 +32,11 @@ char* strDup(char* src) {
     return dupStr;
 }
 
-
 // Auxiliar functions
 
 struct node* findNodeInLevel(struct node** list, char character) {
 
-    struct node* puntero = list[0] -> first;
+    struct node* puntero = list[0]->first;
 
     // Cambié orden de == char, -> next, return
 
@@ -105,29 +104,30 @@ struct node* findNodeInLevel(struct node** list, char character) {
 
 
 struct node* addSortedNewNodeInLevel(struct node** list, char character) {
-    
-    // Creo el nuevo nodo y seteo sus valores en 0 (menos char).
-    struct node* newNode = (struct node*)malloc(sizeof(struct node));
-    newNode -> character = character;
-    newNode -> next = 0;
-    newNode -> end = 0;
-    newNode -> word = 0;
-    newNode -> down = 0;
+    struct node* nuevoNodo = (struct node*)malloc(sizeof(struct node));
+    nuevoNodo->character = character;
+    nuevoNodo->next = 0;
+    nuevoNodo->end = 0;
+    nuevoNodo->word = 0;
+    nuevoNodo->down = 0;
 
-    // Caso 1: la lista está vacia.
-    if((list -> first) == 0) {
-        list -> first = &newNode;
+    struct node* actual = *list; // Toma el primer nodo de la lista (o NULL).
+    
+    // Si la lista está vacia o el primer nodo va después, agrega el nuevo nodo primero.
+    if (actual == NULL || actual->character > character) {
+        nuevoNodo->next = actual;
+        *list = nuevoNodo;
+        return nuevoNodo;
     }
-    else {
-        struct node* anteX;
-        struct node* x = list -> first;
-        while ((x -> character) <= character) {
-            // Caso 2: la lista tiene un solo caracter previo al del nuevo nodo.
-            if ((x -> next) ==0) {
-                x -> next = &newNode
-            }
-        }
+
+    // Busco la posición correcta del nuevo nodo y lo agrego.
+    while (actual->next != NULL && (*(actual->next)).character < character) {
+        actual = actual->next;
     }
+    nuevoNodo->next = actual->next;
+    actual->next = nuevoNodo;
+
+    return nuevoNodo; // Devuelvo un puntero al nodo agregado.
 }
 
 void deleteArrayOfWords(char** words, int wordsCount) {
