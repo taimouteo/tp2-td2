@@ -1,18 +1,147 @@
 #include "utils.h"
-
+// EJERCICIO 1
 int strLen(char* src) {
-
-    // COMPLETAR
-
-    return 0;
+    int c = 0;  // Indice y contador de caracteres.
+    while (src[c]!=0){ // Iterador
+		c++;
+	}
+    return c;
 }
 
 char* strDup(char* src) {
+    
+    int longitudSrc = strLen(src);
+	
+    // Solicitamos la memoria para el string duplicado.
+    char* dupStr = (char*)malloc(sizeof(char)*(longitudStr*2)+1);
+	
+    // Si el string es NULL, devovelmos NULL.
+    if(src == NULL) {
+		return NULL; 
+	}
 
-    // COMPLETAR
-
-    return 0;
+    // Asignamos cada caracter del string a sus dos apariciones en el duplicado.
+	for(int i = 0; i < longitudStr; i++) {
+        dupStr[i] = src[i];
+        dupStr[i+longitudStr] = src[i];
+	}
+	
+    // Agregamos el caracter nulo al final del string.
+    dupStr[longitudStr*2] = 0;
+	
+    return dupStr;
 }
+
+
+// Auxiliar functions
+
+struct node* findNodeInLevel(struct node** list, char character) {
+
+    struct node* puntero = list[0] -> first;
+
+    // Cambié orden de == char, -> next, return
+
+    while(puntero -> next != 0) {
+        
+        puntero = puntero -> next;
+
+        if(puntero -> character == character) {
+            return puntero;
+        } 
+    }
+    
+    puntero = puntero -> NULL;
+
+    return puntero;
+    
+/*
+    struct node* puntero = list[0] -> first;
+    struct node* punteroInicial = list[0] -> first;
+
+    int i = 0;
+
+
+
+
+
+    while (i < list.totalKeys) {
+            
+        if (puntero -> next != character || puntero -> next != 0) {
+
+            if (puntero -> down == 1) {
+                punteroInicial = &puntero;
+                puntero = puntero -> down;
+                i++;
+            }
+
+            if(puntero -> down == 0) {
+                
+                puntero = puntero -> next;
+                i++;
+            }
+            
+        }
+
+        if (puntero -> next = character) {
+            
+            puntero = puntero -> next;
+            return puntero;
+        }
+
+        if (puntero -> next = 0) {
+            
+            puntero = &punteroInicial;
+            i++;
+        }
+        
+    }
+
+    puntero -> NULL;
+    
+    return puntero;
+
+*/
+}
+
+
+struct node* addSortedNewNodeInLevel(struct node** list, char character) {
+    
+    // Creo el nuevo nodo y seteo sus valores en 0 (menos char).
+    struct node* newNode = (struct node*)malloc(sizeof(struct node));
+    newNode -> character = character;
+    newNode -> next = 0;
+    newNode -> end = 0;
+    newNode -> word = 0;
+    newNode -> down = 0;
+
+    // Caso 1: la lista está vacia.
+    if((list -> first) == 0) {
+        list -> first = &newNode;
+    }
+    else {
+        struct node* anteX;
+        struct node* x = list -> first;
+        while ((x -> character) <= character) {
+            // Caso 2: la lista tiene un solo caracter previo al del nuevo nodo.
+            if ((x -> next) ==0) {
+                x -> next = &newNode
+            }
+        }
+    }
+}
+
+void deleteArrayOfWords(char** words, int wordsCount) {
+
+    if (words==NULL){
+        return;
+    }
+    for(int i=0; i<wordsCount; i++){
+        free(words[i]); // Liberamos la memoria de cada string
+    }
+    free(words); // Liberamos la memoria del arreglo de punteros
+}
+
+
 
 // Keys Predict
 
@@ -88,23 +217,3 @@ void keysPredictPrintAux(struct node* n, int level) {
     }
 }
 
-// Auxiliar functions
-
-struct node* findNodeInLevel(struct node** list, char character) {
-
-    // COMPLETAR
-
-    return 0;
-}
-
-struct node* addSortedNewNodeInLevel(struct node** list, char character) {
-
-    // COMPLETAR
-
-    return 0;
-}
-
-void deleteArrayOfWords(char** words, int wordsCount) {
-
-    // COMPLETAR
-}
