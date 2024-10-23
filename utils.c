@@ -218,7 +218,7 @@ char** keysPredictRun(struct keysPredict* kt, char* partialWord, int* wordsCount
             {   
                 struct node* palabra = puntero -> word;
                 
-                palabras[i] = palabra;
+                palabras[i] = &palabra;
 
                 i++;
             } 
@@ -226,11 +226,12 @@ char** keysPredictRun(struct keysPredict* kt, char* partialWord, int* wordsCount
             punteroSec = punteroSec -> down;
         }
         
-        punteroSec = punteroInicial -> next;
+        punteroInicial = punteroInicial -> next;
+        
+        punteroSec = punteroInicial;
         
     }
-
-    
+   
     return palabras;
 }
 
@@ -241,9 +242,38 @@ int keysPredictCountWordAux(struct node* n) {
 
 char** keysPredictListAll(struct keysPredict* kt, int* wordsCount) {
 
-    // COMPLETAR
+    struct node* punteroInicial = kt -> first;
 
-    return 0;
+    struct node* punteroSec = punteroInicial;
+    
+    char** palabras = (char**)malloc(sizeof(char) * (*wordsCount));
+    
+    int i = 0;
+
+    while (punteroSec -> next != 0) 
+    {
+
+        while (punteroSec -> down != 0) 
+        {   
+            if (punteroSec -> end != 0) 
+            {   
+                struct node* palabra = puntero -> word;
+                
+                palabras[i] = &palabra;
+
+                i++;
+            } 
+
+            punteroSec = punteroSec -> down;
+        }
+        
+        punteroInicial = punteroInicial -> next;
+        
+        punteroSec = punteroInicial;
+        
+    }
+
+    return palabras;
 }
 
 void keysPredictDelete(struct keysPredict* kt) {
