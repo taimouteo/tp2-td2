@@ -116,6 +116,7 @@ void keysPredictAddWord(struct keysPredict* kt, char* word) {
             // Como no hay ningún caracter, agrego la palabra entera.
 			for (int i=nivel; i < strLen(word); i++) {
 				*puntero = addSortedNewNodeInLevel(&puntero, word[i]);
+                kt->totalKeys++;
 				puntero = &((*puntero)->down);
 			}
             // Salida forzada.
@@ -126,14 +127,16 @@ void keysPredictAddWord(struct keysPredict* kt, char* word) {
 			// Si no está, la agrega.
             if (letra == 0) {
 				letra = addSortedNewNodeInLevel(puntero, word[nivel]);
+                kt->totalKeys++;
 			}
             // Ya agregué la letra, bajo.
-			puntero = &(letra->down)
+			puntero = &(letra->down);
 		}
         // Si el indice/nivel es el último, la palabra termina.
 		if (nivel==(strLen(word)-1)) {
 			(*puntero) -> word = strDup(word);
 			(*puntero) -> end = 1;
+            kt->totalWords++;
 		}
         // Aumento nivel.
 		nivel++;
@@ -141,29 +144,39 @@ void keysPredictAddWord(struct keysPredict* kt, char* word) {
 }
 
 void keysPredictRemoveWord(struct keysPredict* kt, char* word) {
-    if (kt == NULL || word==NULL || *word== '\0'){
-        return
+    // Chequea que los parametros no estén vacios.
+    if (kt==0 || word==0 || *word==0){
+        return;
     }
-    int longitud = strLen(word);
-    struct node* letra = kt->first;
-    for(int i=0; i<longitud != NULL;i++){
-        letra = findNodeInLevel(&letra, word[i]);
-        if(letra == NULL){
+
+    int longitudWord = strLen(word);
+    struct node* letra = kt->first; // Puntero al primer nodo de cada lista.
+
+    // Ciclo que busca cada caracter (iteración) de la palabra en cada nivel. 
+    for(int i=0; i<longitudWord; i++) {
+        letra = findNodeInLevel(&letra, word[i]); // Letra apunta al nodo con la i-esima letra de word. 
+        
+        // Si la letra no está, la palabra tampoco.
+        if(letra == 0) {
             return;
         }
-        if (word[i+1] != NULL){
+        // Baja de nivel solo si la palabra sigue.
+        if(word[i+1] != 0) {
             letra = letra -> down;
         }
     }
-    if (letra !=NULL && letra->end == 1){
+    // Condición: letra apuntando al último nodo de la palabra.
+    if (letra!=0 && letra->end == 1){
+        
+        // Elimina la palabra 
         letra->end = 0;
-        if (letra->word != NULL){
+        if (letra->word != 0){
             free(letra->word)
-            letra->word = NULL;
+            letra->word = 0;
         }
         kt->totalWords --;
+        kt->totalKeys = kt->totalKeys - longitudWord;
     }   
-    
 }
 
 struct node* keysPredictFind(struct keysPredict* kt, char* word) {
