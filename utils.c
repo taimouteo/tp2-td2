@@ -106,7 +106,7 @@ struct keysPredict* keysPredictNew() {
 }
 
 void keysPredictAddWord(struct keysPredict* kt, char* word) { 
-    struct node** puntero = &(kt->first); // Puntero doble al primer nodo de la estructura.
+	struct node** puntero = &(kt->first); // Puntero doble al primer nodo de la estructura.
 	struct node* letra; // Puntero a la letra buscada.
 	int nivel = 0; // Nivel/iterador de la palabra. Por cada letra agregada bajamos un nivel.
 	
