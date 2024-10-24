@@ -47,7 +47,11 @@ struct node* findNodeInLevel(struct node** list, char character) {
     Implementamos un ciclo que mueve el puntero hacia el nodo siguiente en la lista. Si encuentra el que busca lo
     devuelve, y si no, devuelve 0 (nulo). 
     */
-    
+
+    if(list==0) {
+        return 0;
+    }
+
     struct node* puntero = *list;
     
     while(puntero!=0) {
@@ -119,99 +123,108 @@ struct keysPredict* keysPredictNew() {
 }
 
 void keysPredictAddWord(struct keysPredict* kt, char* word) { 
-	struct node** puntero = &(kt->first); // Puntero doble al primer nodo de la estructura.
-	struct node* letra; // Puntero a la letra buscada.
-	int nivel = 0; // Nivel/iterador de la palabra. Por cada letra agregada bajamos un nivel.
+	/*
+    Inicializa un puntero doble al primer nodo de la lista y un entero que indica tanto el nivel, como la iteración
+    sobre word. La función tiene un ciclo hasta que se llega al ultimo nivel. Siendo 0<=k<strLen(word), si el caracter
+    no se encuentra en el nivel k, agrega la palabra entera desde la posición k, pues si no está el primer caracter tampoco
+    estaran los siguientes. Si el caracter se encuentra en k, el puntero baja hacia la lista siguiente, a menos que sea
+    el último caracter, completando los campos word y end al finalizar el ciclo
+    */
+    
+    struct node** puntero = &(kt->first);
+	int nivel = 0;
 	
-    // Itera sobre la palabra.
-	while (nivel < strLen(word)) {
-        if (*puntero == 0) { // Lista vacia.
-            // Como no hay ningún caracter, agrego la palabra entera.
+    while (nivel < strLen(word)) {
+
+        *puntero = findNodeinLevel(puntero, word[nivel]); 
+
+        // Si el caracter no está.
+        if (*puntero == 0) {
+            
+            // Agrego la palabra completa.
 			for (int i=nivel; i < strLen(word); i++) {
-				*puntero = addSortedNewNodeInLevel(&puntero, word[i]);
+				*puntero = addSortedNewNodeInLevel(puntero, word[i]);
                 kt->totalKeys++;
-				puntero = &((*puntero)->down);
-			}
-            // Salida forzada.
-			nivel = strLen(word)-1;
+                if(word[i+1]!=0) {
+	    			puntero = &((*puntero)->down);
+                }
+			}   
+			nivel = strLen(word)-1; // Salida forzada.
 		} else {
-            // Busco la letra en la lista.
-			letra = findNodeinLevel(puntero, word[nivel]);
-			// Si no está, la agrega.
-            if (letra == 0) {
-				letra = addSortedNewNodeInLevel(puntero, word[nivel]);
-                kt->totalKeys++;
-			}
-            // Ya agregué la letra, bajo.
-			puntero = &(letra->down);
+            // Si no está en el último nivel, bajo de lista.
+            if(word[nivel+1]!=0){
+			    puntero = &((*puntero)->down);
+            }
 		}
-        // Si el indice/nivel es el último, la palabra termina.
-		if (nivel==(strLen(word)-1)) {
-			(*puntero) -> word = strDup(word);
-			(*puntero) -> end = 1;
-            kt->totalWords++;
-		}
-        // Aumento nivel.
 		nivel++;
 	} 
+
+    // Ahora, puntero apunta al nodo del último caracter de la palabra
+    (*puntero)->word = strDup(word);
+	(*puntero)->end = 1;
+    kt->totalWords++;
 }
 
 void keysPredictRemoveWord(struct keysPredict* kt, char* word) {
-    // Chequea que los parametros no estén vacios.
+    /*
+    Inicializa un puntero al primer nodo de la lista. Busca cada caracter en su respectivo nivel. Si el caracter no
+    está en la lista, la palabra tampoco y por lo tanto la función termina. Al llegar al nodo del último caracter,
+    libera la memoria de la palabra y pone end en 0.
+    */
+    
     if (kt==0 || word==0 || *word==0){
         return;
     }
 
     int longitudWord = strLen(word);
-    struct node* letra = kt->first; // Puntero al primer nodo de cada lista.
+    struct node* puntero = kt->first;
 
-    // Ciclo que busca cada caracter (iteración) de la palabra en cada nivel. 
     for(int i=0; i<longitudWord; i++) {
-        letra = findNodeInLevel(&letra, word[i]); // Letra apunta al nodo con la i-esima letra de word. 
+        puntero = findNodeInLevel(&puntero, word[i]);
         
-        // Si la letra no está, la palabra tampoco.
-        if(letra == 0) {
+        if(puntero == 0) { // Si la letra no está, la palabra tampoco.
             return;
         }
-        // Baja de nivel solo si la palabra sigue.
-        if(word[i+1] != 0) {
-            letra = letra -> down;
+    
+        if(word[i+1] != 0) { // Baja de nivel solo si no está en el ultimo nodo.
+            puntero = puntero -> down;
         }
     }
-    // Condición: letra apuntando al último nodo de la palabra.
-    if (letra!=0 && letra->end == 1){
-        
-        // Elimina la palabra 
-        letra->end = 0;
-        if (letra->word != 0){
-            free(letra->word)
-            letra->word = 0;
+
+    if (puntero!=0 && puntero->end == 1){
+        // Elimina la palabra
+        puntero->end = 0;
+        if (puntero->word != 0){
+            free(puntero->word)
+            puntero->word = 0;
         }
         kt->totalWords--;
-        kt->totalKeys = kt->totalKeys - longitudWord;
     }   
 }
 
 struct node* keysPredictFind(struct keysPredict* kt, char* word) {
-    struct node* puntero = kt->first; // Toma el primer elemento de la lista.
+    /*
+    Inicializa un puntero al primer nodo de la lista. Busca el i-esimo caracter en la lista.
+    Si el caracter no está, la palabra no esta y devuelve 0. Si el caracter está y el caracter
+    no es el último, el puntero baja a la siguiente lista. Al terminar el ciclo, el puntero
+    debería estar en el último nodo/caracter de la palabra, y por lo tanto lo devuelve */
 
-    // Ciclo: iteración por cada caracter de la palabra.
+    struct node* puntero = kt->first;
+
     for(int i=0; i < strLen(word); i++) {
-        // Busco la i-esima letra en el nivel actual.
         puntero = findNodeInLevel(&puntero, word[i]); 
-        // Si no está, devuelve el puntero en 0.
-        if(puntero == 0) {
+        
+        if(puntero == 0) { // Si no está, la palabra tampóco.
             puntero = 0;
             return puntero;
         } 
-        // A menos que esté en el último nivel, baja.
-        if(i!=strLen(word)-1) {
+        
+        if(word[i+1]!=0) { // Baja de lista.
             puntero = puntero->down;
         }
     }
-    // Si es el final de la palabra, retorna puntero. En este punto, la condición if no es necesaria
-    // pero la agregamos para comprobar que no halla errores.
-    if(puntero->end==1) {
+    
+    if(puntero->end==1) { // Condición if no es necesaria, pero comprueba que no halla errores.
         return puntero;
     }
 }
