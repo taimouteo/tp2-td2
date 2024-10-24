@@ -4,32 +4,38 @@
 // Ejercicio 1.
 
 int strLen(char* src) {
-    int c = 0;  // Indice y contador de caracteres.
-    while (src[c]!=0){ // Iterador
-		c++;
+    /*
+    La función toma un iterador usado como indice, que aumenta por cada caracter en el string, y lo devuelve.
+    */
+
+    int i = 0;
+    while (src[i]!=0){ 
+		i++;
 	}
-    return c;
+    return i;
 }
 
 char* strDup(char* src) {
+    /*
+    Solicitamos la memoria correspondiente para el string, copiamos caracter a caracter, y agregamos el caracter nulo
+    al final.
+    */
+    
     int longitudSrc = strLen(src);
+    char* dupStr = (char*)malloc(sizeof(char)*(longitudSrc + 1)); // Solicitamos memoria
 	
-    // Solicitamos memoria para el string duplicado.
-    char* dupStr = (char*)malloc(sizeof(char)*(longitudSrc + 1));
-	
-    // Si el string es NULL, devuelve NULL.
+    // Si el string es nulo, devuelve 0.
     if(src==0) {
         dupStr = 0;
 		return dupStr; 
 	}
 
-    // Copiamos el string en duplicado, caracter a caracter.
+    // Copia un caracter de src en dupStr por iteración.
 	for(int i = 0; i < longitudSrc; i++) {
         dupStr[i] = src[i];
 	}
 	
-    // Agregamos el caracter nulo al final del nuevo string duplicado.
-    dupStr[longitudSrc] = 0;
+    dupStr[longitudSrc] = 0; // Agrega el caracter nulo al final del nuevo string.
 	
     return dupStr;
 }
@@ -37,24 +43,32 @@ char* strDup(char* src) {
 // Ejercicio 2.
 
 struct node* findNodeInLevel(struct node** list, char character) {
-    // Toma el puntero al nodo.
+    /*
+    Implementamos un ciclo que mueve el puntero hacia el nodo siguiente en la lista. Si encuentra el que busca lo
+    devuelve, y si no, devuelve 0 (nulo). 
+    */
+    
     struct node* puntero = *list;
     
     while(puntero!=0) {
-        // Condición: si el nodo tiene el mismo caracter, lo devuelve.
+        // Si lo encontró, devuelve el puntero.
         if(puntero->character==character) {
             return puntero;
         }
-        // Continúa.
-        puntero = puntero->next;
+        puntero = puntero->next; // Si no, se mueve al siguiente nodo.
     }
 
-    puntero = NULL;
-    return puntero;
+    return puntero; // En este punto, puntero es 0.
 }
 
 struct node* addSortedNewNodeInLevel(struct node** list, char character) {
-    // Iniciamos un nuevo nodo con sus valores en 0.
+    /*
+    Inicializa un nuevo nodo solo con el valor character y un puntero que itera sobre la lista. Si el nuevo nodo va
+    primero (lista vacía o lugar que le corresponde), lo agrega a la lista y retorna su puntero. Si no, busca un nodo
+    previo a el que quiero agregar, cuyo siguiente nodo (next) vaya luego del nuevo nodo e inserta el nuevo nodo en ese
+    lugar de la lista. El ciclo while tiene una condición especial por si el nuevo nodo va en el ultimo lugar.
+    */
+    
     struct node* nuevoNodo = (struct node*)malloc(sizeof(struct node));
     nuevoNodo -> character = character;
     nuevoNodo -> next = 0;
@@ -62,40 +76,39 @@ struct node* addSortedNewNodeInLevel(struct node** list, char character) {
     nuevoNodo -> word = 0;
     nuevoNodo -> down = 0;
 
-    // Toma el primer nodo de la lista (o NULL).
-    struct node* actual = *list;
+    struct node* puntero = *list;
     
-    // Si la lista está vacia o el primer nodo va después, agrega el nuevo nodo primero.
-    if (actual == NULL || actual->character > character) {
-        nuevoNodo -> next = actual;
+    // Lista vacia o nuevo nodo va primero.
+    if (puntero == 0 || puntero->character > character) {
+        nuevoNodo -> next = puntero;
         *list = nuevoNodo;
         return nuevoNodo;
     }
 
-    // Busco la posición correcta del nuevo nodo y lo agrego.
-    while (actual -> next != NULL && actual->next->character < character) {
-        actual = actual -> next;
+    // Mientras que haya un nodo siguiente y el nodo siguiente vaya después del nuevo nodo.
+    while (puntero -> next != 0 && puntero->next->character < character) {
+        puntero = puntero -> next;
     }
-    nuevoNodo->next = actual->next;
-    actual->next = nuevoNodo;
 
-    // Devuelvo un puntero al nodo agregado.
+    // Agrego el nodo.
+    nuevoNodo->next = puntero->next;
+    puntero->next = nuevoNodo;
     return nuevoNodo; 
 }
 
 void deleteArrayOfWords(char** words, int wordsCount) {
-    int i = 0;
-    // Iteramos sobre todas las palabras.
-    while(i<wordsCount) {
-        // Liberamos la memoria de cada palabra.
-        free(words[i]); 
-        i++;
+    /*
+    Primero itera sobre el arreglo y libera la memoria de cada uno de sus elementos, y luego libera el arreglo entero.
+    */
+
+    for(int i=0; i<wordsCount; i++) {
+        free(words[i]); // Cada elemento.
     }
-    // Liberamos la memoria del arreglo entero.
-    free(words); 
+    
+    free(words); // Arreglo entero.
 }
 
-// Ejercicio 3: funciones principales. 
+// Ejercicio 3. 
 
 struct keysPredict* keysPredictNew() {
     struct keysPredict* kt = (struct keysPredict*)malloc(sizeof(struct keysPredict));
@@ -174,34 +187,33 @@ void keysPredictRemoveWord(struct keysPredict* kt, char* word) {
             free(letra->word)
             letra->word = 0;
         }
-        kt->totalWords --;
+        kt->totalWords--;
         kt->totalKeys = kt->totalKeys - longitudWord;
     }   
 }
 
 struct node* keysPredictFind(struct keysPredict* kt, char* word) {
+    struct node* puntero = kt->first; // Toma el primer elemento de la lista.
 
-    int i = 0;
-
-    struct node* puntero = kt -> first;
-
-    while (i < strLen(word))
-    {
-        puntero = findNodeInLevel(puntero, word[i]);
-
-        if (puntero == NULL) 
-        {
-            return 0;
+    // Ciclo: iteración por cada caracter de la palabra.
+    for(int i=0; i < strLen(word); i++) {
+        // Busco la i-esima letra en el nivel actual.
+        puntero = findNodeInLevel(&puntero, word[i]); 
+        // Si no está, devuelve el puntero en 0.
+        if(puntero == 0) {
+            puntero = 0;
+            return puntero;
         } 
-        
-        else
-        {
-            puntero = puntero -> down;
-            i++;
+        // A menos que esté en el último nivel, baja.
+        if(i!=strLen(word)-1) {
+            puntero = puntero->down;
         }
     }
-
-    return puntero;
+    // Si es el final de la palabra, retorna puntero. En este punto, la condición if no es necesaria
+    // pero la agregamos para comprobar que no halla errores.
+    if(puntero->end==1) {
+        return puntero;
+    }
 }
 
 char** keysPredictRun(struct keysPredict* kt, char* partialWord, int* wordsCount) {
