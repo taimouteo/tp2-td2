@@ -230,44 +230,68 @@ struct node* keysPredictFind(struct keysPredict* kt, char* word) {
 }
 
 char** keysPredictRun(struct keysPredict* kt, char* partialWord, int* wordsCount) {
+    /*
+    El primer bloque recorre la estructura buscando la última letra del prefijo. Luego, puntero apunta al primer nodo
+    de la lista abajo de esa letra. totalWords llama a keysPredictCountWordAux que cuenta la cantidad de palabras que
+    hay en la estructura desde puntero y guarda su valor en wordsCount. Luego, asignamos memoria al arreglo de strings
+    res, y guardamos la dirección de su primer elemento en una función auxiliar. Llamamos a keysPredictRunAux, el cual
+    modifica res agregando las palabras que encuentra en la estructura, y retornamos el puntero res a la dirección de
+    memoria donde empezo (guardada en aux
+    */
+   
+   // Primer bloque.
+    struct node* puntero = kt->first;
 
-    struct node* punteroInicial = keysPredictFind(kt, partialWord) -> down;
-
-    struct node* punteroSec = punteroInicial;
-    
-    char** palabras = (char**)malloc(sizeof(char) * (*wordsCount));
-    
-    int i = 0;
-
-    while (punteroSec -> next != 0) 
-    {
-
-        while (punteroSec -> down != 0) 
-        {   
-            if (punteroSec -> end != 0) 
-            {   
-                struct node* palabra = puntero -> word;
-                
-                palabras[i] = &palabra;
-
-                i++;
-            } 
-
-            punteroSec = punteroSec -> down;
+    for(int i=0; i<strLen(partialWord); i++) {
+        puntero = findNodeInLevel(&puntero, partialWord[i]);
+        if(puntero==0) {
+            return 0;
         }
-        
-        punteroInicial = punteroInicial -> next;
-
-        punteroSec = punteroInicial;
-        
+        puntero = puntero->down;
     }
 
-    return palabras;
+    // Contar palabras en la estructura
+    int totalWords = keysPredictCountWordAux(puntero);
+    *wordsCount = totalWords;
+
+    // Arreglo de strings.
+    char** res = (char**)malloc(sizeof(char*)*totalWords);
+    char** aux = res
+    keysPredictRunAux(puntero, res);
+    res = aux;
+
+    return res;
 }
 
 int keysPredictCountWordAux(struct node* n) {
+    /* Función auxiliar recursiva que toma un puntero, y en caso de ser no nulo, devuelve 1 si el nodo representa el fin
+    de una palabra, y hace un llamado recursivo de la función, con los punteros a la lista del nivel más abajo y del 
+    nodo siguiente en la lista. */
 
-    // COMPLETAR
+    if (n==0) {
+        return 0;
+    } 
+    if (n->end==1) { // Encontró palabra.
+        return 1 + keysPredictCountWordAux(n->down) + keysPredictCountWordAux(n->next);
+    } else {
+        return keysPredictCountWordAux(n->down) + keysPredictCountWordAux(n->next);
+    }
+}
+
+void keysPredictRunAux(struct node* n, char** prefixWords) {
+    /* Función auxiliar recursiva que toma un puntero, y en caso de ser no nulo y si el nodo representa el fin de una 
+    palabra, agrega la palabra al arreglo de strings pasado por parámetro. Luego, hace un llamado recursivo de la 
+    misma función con los punteros a la lista del nivel más abajo y del nodo siguiente en la lista. */
+
+    if (n==0) {
+        return;
+    }
+    if (n->end==1) { // Encontró palabra
+        *prefixWords = n->word;
+        prefixWords++;
+    }
+    keysPredictRunAux(n->down, prefixWords);
+    keysPredictRunAux(n->next, prefixWords);
 }
 
 char** keysPredictListAll(struct keysPredict* kt, int* wordsCount) {
