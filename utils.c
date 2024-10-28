@@ -256,7 +256,7 @@ char** keysPredictRun(struct keysPredict* kt, char* partialWord, int* wordsCount
 
     // Arreglo de strings.
     char** res = (char**)malloc(sizeof(char*)*totalWords);
-    char** aux = res
+    char** aux = res;
     keysPredictRunAux(puntero, res);
     res = aux;
 
@@ -278,7 +278,7 @@ int keysPredictCountWordAux(struct node* n) {
     }
 }
 
-void keysPredictRunAux(struct node* n, char** prefixWords) {
+void keysPredictWordsArrayAux(struct node* n, char** prefixWords) {
     /* Función auxiliar recursiva que toma un puntero, y en caso de ser no nulo y si el nodo representa el fin de una 
     palabra, agrega la palabra al arreglo de strings pasado por parámetro. Luego, hace un llamado recursivo de la 
     misma función con los punteros a la lista del nivel más abajo y del nodo siguiente en la lista. */
@@ -295,44 +295,65 @@ void keysPredictRunAux(struct node* n, char** prefixWords) {
 }
 
 char** keysPredictListAll(struct keysPredict* kt, int* wordsCount) {
+    /*
+    Llama a la función keysPredictRunAux que dado un puntero, hace una lista de todas las palabras que se pueden armar
+    con ese puntero, pero le pasa como parametro el primer nodo de la estructura kt, listando así la estructura completa.
+    */
 
     struct node* punteroInicial = kt -> first;
-
-    struct node* punteroSec = punteroInicial;
-
-    char** palabras = (char**)malloc(sizeof(char) * (*wordsCount));
-
-    int i = 0;
-
-    while (punteroSec -> next != 0) 
-    {
-        while (punteroSec -> down != 0) 
-        {   
-            if (punteroSec -> end != 0) 
-            {   
+    // struct node* punteroSec = punteroInicial;
+    char** palabras = (char**)malloc(sizeof(char*)*(*wordsCount));
+    // int i = 0;
+    /*
+    while (punteroSec -> next != 0) {
+        while (punteroSec -> down != 0) {   
+            if (punteroSec -> end != 0) {   
                 struct node* palabra = puntero -> word;
-
                 palabras[i] = &palabra;
-
                 i++;
             } 
-
             punteroSec = punteroSec -> down;
         }
-
         punteroInicial = punteroInicial -> next;
-
         punteroSec = punteroInicial;
-
     }
+    */
+    char** aux = palabras;
+    keysPredictRunAux(punteroInicial, palabras);
+    palabras = aux;
 
     return palabras;
 }
 
 void keysPredictDelete(struct keysPredict* kt) {
+    /*
+    La función toma el puntero al primer nodo de la estructura y llama a la función keysPredictDeleteAux que elimina cada
+    nodo y palabra de la estructura usando recursión. Luego, vuelve a poner todos los valor de la estructura keysPredict
+    en 0/NULL.
+    */
+    struct node* puntero = kt->first;
+    keysPredictDeleteAux(puntero);
+    kt->first = 0;
+    kt->totalKeys = 0;
+    kt->totalWords = 0;
+}
 
-    // COMPLETAR
-
+void keysPredictDeleteAux(struct node* n) {
+    /*
+    Función auxiliar recursiva que toma un puntero, y en caso de ser no nulo, libera la memoria del nodo actual. Previamente,
+    hace un llamado recursivo de la misma función con los punteros a la lista del nivel más abajo y del nodo siguiente
+    en la lista, liberando así también su memoria. */
+    
+    if(n==0) {
+        return;
+    } else {
+        if(n->end==1){
+            free(n->word);
+        }
+        keysPredictDeleteAux(n->down);
+        keysPredictDeleteAux(n->next);
+        free(n);
+    }
 }
 
 void keysPredictPrint(struct keysPredict* kt) {
