@@ -136,7 +136,7 @@ void keysPredictAddWord(struct keysPredict* kt, char* word) {
 	
     while (nivel < strLen(word)) {
 
-        *puntero = findNodeinLevel(puntero, word[nivel]); 
+        *puntero = findNodeInLevel(puntero, word[nivel]); 
 
         // Si el caracter no está.
         if (*puntero == 0) {
@@ -270,12 +270,14 @@ int keysPredictCountWordAux(struct node* n) {
 
     if (n==0) {
         return 0;
-    } 
-    if (n->end==1) { // Encontró palabra.
-        return 1 + keysPredictCountWordAux(n->down) + keysPredictCountWordAux(n->next);
     } else {
-        return keysPredictCountWordAux(n->down) + keysPredictCountWordAux(n->next);
+        if (n->end==1) { // Encontró palabra.
+            return 1 + keysPredictCountWordAux(n->down) + keysPredictCountWordAux(n->next);
+        } else {
+            return keysPredictCountWordAux(n->down) + keysPredictCountWordAux(n->next);
     }
+    }
+    
 }
 
 void keysPredictWordsArrayAux(struct node* n, char** prefixWords) {
