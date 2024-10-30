@@ -26,18 +26,18 @@ int main() {
     // A Continuacion dejamos algunos ejemplos de como
     // llamar a las funciones pedidas. Este codigo debe
     // ser borrado / modificado.
-
+	
     // strLen
     int len = strLen("hola");
     printf("strDup(\"hola\") -> \"%i\"\n", len);
     printf("\n");
-
+	
     // strDup
     char* dup = strDup("hola");
     printf("strDup(\"hola\") -> \"%s\"\n", dup);
     free(dup);
     printf("\n");
-
+	
     // keysPredict
     struct keysPredict* kt = keysPredictNew();
     
@@ -65,7 +65,7 @@ int main() {
         printf("%s\n", words[i]);
     }
     deleteArrayOfWords(words, wordsCount);
-
+	/*
     // keysPredict - encontrar palabras
     findAndPrintAll(kt, "papa");
     findAndPrintAll(kt, "pata");
@@ -90,6 +90,6 @@ int main() {
 
     // keysPredict - borrar diccionario
     keysPredictDelete(kt);
-
+	*/
     return 0;
 }
