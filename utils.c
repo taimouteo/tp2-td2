@@ -249,7 +249,7 @@ char** keysPredictWordsArrayAux(struct node* n, char** prefixWords) {
 		return prefixWords;
 	}
 	if (n->end==1) { // Encontró palabra
-		*prefixWords = n->word;
+		*prefixWords = strDup(n->word);
 		prefixWords++;
 	}
 	prefixWords = keysPredictWordsArrayAux(n->down, prefixWords);
