@@ -5,11 +5,11 @@
 
 int strLen(char* src) {
     /*
-    La función toma un iterador usado como indice, que aumenta por cada caracter en el string, y lo devuelve.
+    La funcion toma un iterador usado como indice, que aumenta por cada caracter en el string, y lo devuelve.
     */
 
     int i = 0;
-    while (src[i]!=0){ 
+    while(src[i]!=0) { 
 		i++;
 	}
     return i;
@@ -17,8 +17,7 @@ int strLen(char* src) {
 
 char* strDup(char* src) {
     /*
-    Solicitamos la memoria correspondiente para el string, copiamos caracter a caracter, y agregamos el caracter nulo
-    al final.
+    Solicitamos la memoria correspondiente para el string, copiamos caracter a caracter, y agregamos el caracter nulo al final.
     */
     
     int longitudSrc = strLen(src);
@@ -44,8 +43,8 @@ char* strDup(char* src) {
 
 struct node* findNodeInLevel(struct node** list, char character) {
     /*
-    Implementamos un ciclo que mueve el puntero hacia el nodo siguiente en la lista. Si encuentra el que busca lo
-    devuelve, y si no, devuelve 0 (nulo). 
+    Inicializa puntero, que toma el valor de lo que apunta list. Si es nulo, lo devuelve en 0, y si no, mueve el puntero hacia el nodo siguiente de la lista en cada 
+    iteraciÃ³n del while hasta encontrar al nodo que tenga character. Si no lo encuentra devuelve 0 (puntero = Ãºltimo next). 
     */
 	
 	struct node* puntero = *list;
@@ -56,7 +55,7 @@ struct node* findNodeInLevel(struct node** list, char character) {
     }
     
     while(puntero!=0) {
-        // Si lo encontró, devuelve el puntero.
+        // Si lo encontro, devuelve el puntero.
         if(puntero->character==character) {
             return puntero;
         }
@@ -68,12 +67,12 @@ struct node* findNodeInLevel(struct node** list, char character) {
 
 struct node* addSortedNewNodeInLevel(struct node** list, char character) {
     /*
-    Inicializa un nuevo nodo solo con el valor character y un puntero que itera sobre la lista. Si el nuevo nodo va
-    primero (lista vacía o lugar que le corresponde), lo agrega a la lista y retorna su puntero. Si no, busca un nodo
-    previo a el que quiero agregar, cuyo siguiente nodo (next) vaya luego del nuevo nodo e inserta el nuevo nodo en ese
-    lugar de la lista. El ciclo while tiene una condiciÃ³n especial por si el nuevo nodo va en el ultimo lugar.
+    Inicializa un nuevo nodo. Si el nuevo nodo va primero (lista vacia o lugar que le corresponde), lo agrega a la lista y retorna su puntero. Si no, va moviendo
+    un puntero por la lista hasta encontrar la posiciÃ³n correcta (puntero->next->character < character). Cuando termina el ciclo while, puntero apunta al nodo
+    anterior a character o al next del Ãºltimo nodo de la lista, entonces agregamos el nodo a la lista usando el puntero.
     */
     
+    // Iniciamos nodo.
     struct node* nuevoNodo = (struct node*)malloc(sizeof(struct node));
     nuevoNodo->character = character;
     nuevoNodo->next = 0;
@@ -81,7 +80,7 @@ struct node* addSortedNewNodeInLevel(struct node** list, char character) {
     nuevoNodo->word = 0;
     nuevoNodo->down = 0;
     
-    // Lista vacia o nuevo nodo va primero.
+    // El nuevo nodo va primero.
     if (*list == 0 || (*list)->character > character) {
         nuevoNodo -> next = *list;
 		*list = nuevoNodo;
@@ -89,7 +88,7 @@ struct node* addSortedNewNodeInLevel(struct node** list, char character) {
     }
 	
 	struct node* puntero = *list;
-    // Mientras que haya un nodo siguiente y el nodo siguiente vaya después del nuevo nodo.
+    // Busco la posiciÃ³n correcta.
     while(puntero->next!=0 && puntero->next->character < character) {
 		puntero = puntero->next;
     }
@@ -102,7 +101,7 @@ struct node* addSortedNewNodeInLevel(struct node** list, char character) {
 
 void deleteArrayOfWords(char** words, int wordsCount) {
     /*
-    Primero itera sobre el arreglo y libera la memoria de cada uno de sus elementos, y luego libera el arreglo entero.
+    Itera por cada elemento del array liberando la memoria de cada uno, y finalmente libera el array completo.
     */
 
     for(int i=0; i<wordsCount; i++) {
@@ -124,11 +123,10 @@ struct keysPredict* keysPredictNew() {
 
 void keysPredictAddWord(struct keysPredict* kt, char* word) { 
 	/*
-    Inicializa un puntero doble al primer nodo de la lista y un entero que indica tanto el nivel, como la iteración
-    sobre word. La función tiene un ciclo hasta que se llega al ultimo nivel. Siendo 0<=k<strLen(word), si el caracter
-    no se encuentra en el nivel k, agrega la palabra entera desde la posición k, pues si no está¡ el primer caracter tampoco
-    estaran los siguientes. Si el caracter se encuentra en k, el puntero baja hacia la lista siguiente, a menos que sea
-    el último caracter, completando los campos word y end al finalizar el ciclo
+    Primero chequea que los parametros no esten vacios. Luego, inicializa 2 punteros: punteroLista apunta al primer nodo de la lista actual y punteroNodo apunta al nodo
+    que estamos buscando en cada lista (word[i]). Si punteroNodo es 0, es decir, alguna letra de la palabra a agregar no estÃ¡ en la lista, agrega la letra, y las demÃ¡s
+    se agregaran tambien en cada iteracion, pues punteroNodo siempre sera 0. En cada iteracion punteroLista baja de nivel, y al terminar, punteroNodo apunta al Ãºltimo
+    nodo de la palabra, para completar sus campos word y end.
 	*/
 	
 	if(kt == 0 || word == 0 || *word == 0) {
@@ -138,22 +136,22 @@ void keysPredictAddWord(struct keysPredict* kt, char* word) {
 	struct node** punteroLista = &(kt->first);
 	struct node* punteroNodo = 0;
 	
-	// Recorre cada letra de la palabra
+	
 	for(int i=0; word[i]!=0; i++) {
-		// Busca el nodo con la letra actual en el nivel actual
+		// Busca el nodo con la i-esima letra en el nivel actual
 		punteroNodo = findNodeInLevel(punteroLista, word[i]);
 		
-		// Si el nodo no existe, lo crea y lo agrega en orden
+		// Si la letra no estÃ¡, la agrega.
 		if (punteroNodo == 0) {
 			punteroNodo = addSortedNewNodeInLevel(punteroLista, word[i]);
 			kt->totalKeys++;
 		}
 		
-		// Baja al siguiente nivel (campo down), donde se buscará o agregará la siguiente letra
+		// Baja al siguiente nivel.
 		punteroLista = &(punteroNodo->down);
 	}
 	
-	// En el último nodo, añade la palabra y marca el nodo como final de palabra
+	// punteroNodo apunta al ultimo nodo de la palabra.
 	if (punteroNodo != 0 && punteroNodo->end == 0) {
 		punteroNodo->end = 1;
 		punteroNodo->word = strDup(word);
@@ -163,22 +161,21 @@ void keysPredictAddWord(struct keysPredict* kt, char* word) {
 
 struct node* keysPredictFind(struct keysPredict* kt, char* word) {
 	/*
-	Inicializa un puntero al primer nodo de la lista. Busca el i-esimo caracter en la lista.
-	Si el caracter no está, la palabra no esta y devuelve 0. Si el caracter está y el caracter
-	no es el último, el puntero baja a la siguiente lista. Al terminar el ciclo, el puntero
-	deberá estar en el último nodo/caracter de la palabra, y por lo tanto lo devuelve */
+	Inicializa un puntero al primer nodo de la lista. Si el i-esimo caracter de word no estÃ¡ en la estructura, la palabra no esta y devuelve 0. Si el caracter esta
+    y el caracter no es el ultimo, el puntero baja a la siguiente lista. Al terminar el ciclo, el puntero esta en el ultimo nodo/caracter de la palabra y lo devuelve. 
+    */
 	
 	struct node* puntero = kt->first;
 	
 	for(int i=0; i < strLen(word); i++) {
 		puntero = findNodeInLevel(&puntero, word[i]); 
 		
-		if(puntero == 0) { // Si no está, la palabra tampoco.
+		if(puntero == 0) { // Si no esta, la palabra tampoco.
 			puntero = 0;
 			return puntero;
 		} 
 		
-		if(word[i+1]!=0) { // Baja de lista.
+		if(word[i+1]!=0) { // Baja de nivel.
 			puntero = puntero->down;
 		}
 	}
@@ -188,9 +185,8 @@ struct node* keysPredictFind(struct keysPredict* kt, char* word) {
 
 void keysPredictRemoveWord(struct keysPredict* kt, char* word) {
     /*
-    Inicializa un puntero al primer nodo de la lista. Busca cada caracter en su respectivo nivel. Si el caracter no
-    está en la lista, la palabra tampoco y por lo tanto la función termina. Al llegar al nodo del último caracter,
-    libera la memoria de la palabra y pone end en 0.
+    Verifica que los parametros no esten vacios. Inicializa un puntero al ultimo nodo de la palabra a eliminar. Si el puntero es 0, la palabra no esta y la funcion
+    termina. Si el puntero es el final de una palabra (deberia serlo), pone end en 0, y libera la memoria del campo word, poniendolo en 0. 
     */
     
     if (kt==0 || word==0 || *word==0){
@@ -215,14 +211,14 @@ void keysPredictRemoveWord(struct keysPredict* kt, char* word) {
 }
 
 int keysPredictCountWordAux(struct node* n) {
-	/* Función auxiliar recursiva que toma un puntero, y en caso de ser no nulo, devuelve 1 si el nodo representa el fin
-	de una palabra, y hace un llamado recursivo de la función, con los punteros a la lista del nivel más abajo y del 
-	nodo siguiente en la lista. */
+	/* Funcion auxiliar recursiva. Toma un puntero. Si es nulo devuelve 0. Si el nodo es el ultima de una palabra, retorna la suma entre 1, y el llamado de la
+    misma funciÃ³n con el nodo de abajo y el siguiente. Recursivamente llegarÃ¡ a donde el nodo de abajo y el siguiente sean 0 para cada una de las listas y de los
+    nodos, y cuando llegue, el primer llamado retornara la suma de todos los llamados anteriores.  */
 	
-	if (n==0) {
+	if (n==0) { // Caso base: nodo vacio, no hay palabra
 		return 0;
 	} else {
-		if (n->end==1) { // Encontró palabra.
+		if (n->end==1) { // Encontre palabra.
 			return 1 + keysPredictCountWordAux(n->down) + keysPredictCountWordAux(n->next);
 		} else {
 			return keysPredictCountWordAux(n->down) + keysPredictCountWordAux(n->next);
@@ -232,34 +228,36 @@ int keysPredictCountWordAux(struct node* n) {
 }
 
 char** keysPredictWordsArrayAux(struct node* n, char** prefixWords) {
-	/* Función auxiliar recursiva que toma un puntero, y en caso de ser no nulo y si el nodo representa el fin de una 
-	palabra, agrega la palabra al arreglo de strings pasado por parÃ¡metro. Luego, hace un llamado recursivo de la 
-	misma función con los punteros a la lista del nivel más abajo y del nodo siguiente en la lista. */
+	/*
+    FunciÃ³n auxiliar recursiva. Recorre la estructura y en cada nodo que marca el final de una palabra, copia la palabra en el arreglo de strings prefixWords pasado
+    por parametro. Luego llama a si misma recursivamente pasando el puntero a la lista de abajo como parametro y al siguiente nodo en la misma lista, construyendo una
+    lista completa de todas las palabras en la estructura.
+    */
 	
-	if (n==0) {
+
+	if (n==0) { // Si el nodo es nulo, devuelve el puntero actual de prefixWords
 		return prefixWords;
 	}
-	if (n->end==1) { // Encontró palabra
+	if (n->end==1) { // Si el nodo marca el final de una palabra agrega una copia de la palabra al arreglo
 		*prefixWords = strDup(n->word);
 		prefixWords++;
 	}
+    // Llama recursivamente a la funciÃ³n para el nivel de abajo y actualiza prefixWords
 	prefixWords = keysPredictWordsArrayAux(n->down, prefixWords);
+
+    // Llama recursivamente a la funciÃ³n para el siguiente nodo en la lista next
 	return keysPredictWordsArrayAux(n->next, prefixWords);
 }
 
 char** keysPredictRun(struct keysPredict* kt, char* partialWord, int* wordsCount) {
     /*
-    El primer bloque recorre la estructura buscando la última letra del prefijo. Luego, puntero apunta al primer nodo
-    de la lista abajo de esa letra. totalWords llama a keysPredictCountWordAux que cuenta la cantidad de palabras que
-    hay en la estructura desde puntero y guarda su valor en wordsCount. Luego, asignamos memoria al arreglo de strings
-    res, y guardamos la dirección de su primer elemento en una función auxiliar. Llamamos a keysPredictRunAux, el cual
-    modifica res agregando las palabras que encuentra en la estructura, y retornamos el puntero res a la dirección de
-    memoria donde empezo (guardada en aux).
+    Recorre la estructura hasta llegar a la Ãºltima letra del prefijo. El puntero apunta a la lista abajo de esa letra. totalWords llama a keysPredictCountWordAux,
+    que cuenta la cantidad de palabras. Asignamos memoria al arreglo de strings res, y hacemos un llamado a keysPredictWordsArrayAux, que crea un arreglo de todos
+    los strings que hay a partir del puntero pasado por parametro, devolviendo el puntero al primer elemento.
     */
    
-   // Primer bloque.
     struct node* puntero = kt->first;
-
+    // Punteo apunta a la ultima letra del prefijo
     for(int i=0; partialWord[i]!=0; i++) {
         puntero = findNodeInLevel(&puntero, partialWord[i]);
         if(puntero==0) {
@@ -269,7 +267,6 @@ char** keysPredictRun(struct keysPredict* kt, char* partialWord, int* wordsCount
 		puntero = puntero->down;
     }
 
-    // Contar palabras en la estructura
     *wordsCount = keysPredictCountWordAux(puntero);
 
     // Arreglo de strings.
@@ -280,8 +277,8 @@ char** keysPredictRun(struct keysPredict* kt, char* partialWord, int* wordsCount
 
 char** keysPredictListAll(struct keysPredict* kt, int* wordsCount) {
     /*
-    Llama a la función keysPredictRunAux que dado un puntero, hace una lista de todas las palabras que se pueden armar
-    con ese puntero, pero le pasa como parametro el primer nodo de la estructura kt, listando así la estructura completa.
+    Llama a la funcion keysPredictRunAux que dado un puntero, hace una lista de todas las palabras que se pueden armar con ese puntero, pero le pasa como parametro
+    el primer nodo de la estructura kt, listando asï¿½ la estructura completa.
     */
 
     struct node* punteroInicial = kt->first;
@@ -294,9 +291,9 @@ char** keysPredictListAll(struct keysPredict* kt, int* wordsCount) {
 
 void keysPredictDeleteAux(struct node* n) {
 	/*
-	Función auxiliar recursiva que toma un puntero, y en caso de ser no nulo, libera la memoria del nodo actual. Previamente,
-	hace un llamado recursivo de la misma función con los punteros a la lista del nivel más abajo y del nodo siguiente
-	en la lista, liberando así también su memoria. */
+	Funciï¿½n auxiliar recursiva que toma un puntero, y en caso de ser no nulo, libera la memoria del nodo actual. Previamente,
+	hace un llamado recursivo de la misma funciï¿½n con los punteros a la lista del nivel mï¿½s abajo y del nodo siguiente
+	en la lista, liberando asï¿½ tambiï¿½n su memoria. */
 	
 	if(n==0) {
 		return;
@@ -312,8 +309,8 @@ void keysPredictDeleteAux(struct node* n) {
 
 void keysPredictDelete(struct keysPredict* kt) {
     /*
-    La función toma el puntero al primer nodo de la estructura y llama a la función keysPredictDeleteAux que elimina cada
-    nodo y palabra de la estructura usando recursión. Luego, vuelve a poner todos los valor de la estructura keysPredict
+    La funciï¿½n toma el puntero al primer nodo de la estructura y llama a la funciï¿½n keysPredictDeleteAux que elimina cada
+    nodo y palabra de la estructura usando recursiï¿½n. Luego, vuelve a poner todos los valor de la estructura keysPredict
     en 0/NULL.
     */
     struct node* puntero = kt->first;
