@@ -161,6 +161,31 @@ void keysPredictAddWord(struct keysPredict* kt, char* word) {
 	}
 }
 
+struct node* keysPredictFind(struct keysPredict* kt, char* word) {
+	/*
+	Inicializa un puntero al primer nodo de la lista. Busca el i-esimo caracter en la lista.
+	Si el caracter no está, la palabra no esta y devuelve 0. Si el caracter está y el caracter
+	no es el último, el puntero baja a la siguiente lista. Al terminar el ciclo, el puntero
+	deberá estar en el último nodo/caracter de la palabra, y por lo tanto lo devuelve */
+	
+	struct node* puntero = kt->first;
+	
+	for(int i=0; i < strLen(word); i++) {
+		puntero = findNodeInLevel(&puntero, word[i]); 
+		
+		if(puntero == 0) { // Si no está, la palabra tampoco.
+			puntero = 0;
+			return puntero;
+		} 
+		
+		if(word[i+1]!=0) { // Baja de lista.
+			puntero = puntero->down;
+		}
+	}
+	
+	return puntero;
+}
+
 void keysPredictRemoveWord(struct keysPredict* kt, char* word) {
     /*
     Inicializa un puntero al primer nodo de la lista. Busca cada caracter en su respectivo nivel. Si el caracter no
@@ -172,22 +197,13 @@ void keysPredictRemoveWord(struct keysPredict* kt, char* word) {
         return;
     }
 
-    int longitudWord = strLen(word);
-    struct node* puntero = kt->first;
+	struct node* puntero = keysPredictFind(kt, word);
+	
+	if (puntero==0) {
+		return;
+	}
 
-    for(int i=0; i<longitudWord; i++) {
-        puntero = findNodeInLevel(&puntero, word[i]);
-        
-        if(puntero == 0) { // Si la letra no está, la palabra tampoco.
-            return;
-        }
-    
-        if(word[i+1] != 0) { // Baja de nivel solo si no está en el ultimo nodo.
-            puntero = puntero -> down;
-        }
-    }
-
-    if (puntero!=0 && puntero->end == 1){
+    if (puntero->end == 1){
         // Elimina la palabra
         puntero->end = 0;
         if (puntero->word != 0){
@@ -195,32 +211,7 @@ void keysPredictRemoveWord(struct keysPredict* kt, char* word) {
             puntero->word = 0;
         }
         kt->totalWords--;
-    }   
-}
-
-struct node* keysPredictFind(struct keysPredict* kt, char* word) {
-    /*
-    Inicializa un puntero al primer nodo de la lista. Busca el i-esimo caracter en la lista.
-    Si el caracter no está, la palabra no esta y devuelve 0. Si el caracter está y el caracter
-    no es el último, el puntero baja a la siguiente lista. Al terminar el ciclo, el puntero
-    deberá estar en el último nodo/caracter de la palabra, y por lo tanto lo devuelve */
-
-    struct node* puntero = kt->first;
-
-    for(int i=0; i < strLen(word); i++) {
-        puntero = findNodeInLevel(&puntero, word[i]); 
-        
-        if(puntero == 0) { // Si no está, la palabra tampoco.
-            puntero = 0;
-            return puntero;
-        } 
-        
-        if(word[i+1]!=0) { // Baja de lista.
-            puntero = puntero->down;
-        }
     }
-    
-    return puntero;
 }
 
 int keysPredictCountWordAux(struct node* n) {
