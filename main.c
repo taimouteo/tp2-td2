@@ -20,82 +20,83 @@ void findAndPrintAll(struct keysPredict* kt, char* word ) {
 }
 
 int main() {
-    // EJERCICIO 4
-
-    // strLen
-    char* a = "";
-    char* b = "a";
-    char* c = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-    int aLen = strLen(a); // String vacio
-    int bLen = strLen(b); // String de un caracter
-    int cLen = strLen(c); // Todos los caracteres alfanumericos
-
-    printf("El string \"%s\" mide %i\n", a, aLen);
-    printf("El string \"%s\" mide %i\n", b, bLen);
-    printf("El string \"%s\" mide %i\n", c, cLen);
-
-    // strDup
-    char* aDup = strDup(a); // String vacio
-    char* bDup = strDup(b); // String de un caracter
-    char* cDup = strDup(c); // Todos los caracteres alfanumerico
-    
-    printf("strDup(\"%s\") = \"%s\"\n", a, aDup);
-    printf("strDup(\"%s\") = \"%s\"\n", b, bDup);
-    printf("strDup(\"%s\") = \"%s\"\n", c, cDup);
-
-    // keysPredict casos chicos.
-    struct keysPredict* kt = keysPredictNew();
-
-    // Armar un diccionar con las palabras ‚Äúalfajor‚Äù, ‚Äúcanoa‚Äù, ‚Äúrinoceronte‚Äù, ‚Äúcasa‚Äù y ‚Äúrino‚Äù.
-    keysPredictAddWord(kt, "alfajor");
-    keysPredictAddWord(kt, "canoa");
-    keysPredictAddWord(kt, "rinoceronte");
-    keysPredictAddWord(kt, "casa");
-    keysPredictAddWord(kt, "rino");
-    keysPredictPrint(kt);
-
-    // Borrar la palabra ‚Äúcanoa‚Äù y agregar la palabra ‚Äúpato‚Äù.
-    keysPredictRemoveWord(kt,"canoa");
-    keysPredictAddWord(kt, "pato");
-    keysPredictPrint(kt);
-
-    // Predecir a partir ‚Äúc‚Äù, ‚Äúca‚Äù, ‚Äúcasa‚Äù y ‚Äúcasas‚Äù.
-    predictAndPrintAll(kt,"c");
-    predictAndPrintAll(kt,"ca");
-    predictAndPrintAll(kt,"casa");
-    predictAndPrintAll(kt,"casas");
-
-    keysPredictDelete(kt);
-    
-    // keysPredict casos grande.
-    struct keysPredict* kw = keysPredictNew();
-
-    //Agregar 100 palabras a un diccionario
-    char* hundredWordsDict[] = {"gato", "perro", "cielo", "flor", "casa", "arbol", "camino", "cabeza", "corazon",
-        "dedo", "luz", "fuego", "agua", "tierra", "aire", "sol", "luna", "estrella", "bosque", "rio",
-        "nube", "lluvia", "trueno", "wacdwsd", "zanahorias", "oceano", "no", "hoja", "pluma", "lapiz",
-        "mano", "pie", "ojos", "nariz", "boca", "diente", "oreja", "espada", "escudo", "puerta",
-        "ventana", "pared", "techo", "suelo", "madera", "piedra", "metal", "acero", "oro", "plata",
-        "artificial", "river", "vehiculo", "rueda", "escribania", "cuerda", "sonido", "musica", "ritmo", "nota",
-        "arte", "pintura", "escultura", "danza", "cancion", "ciudad", "otorrinolaringologia", "pueblo", "calle", "parque",
-        "verde", "rojo", "azul", "amarillo", "violeta", "naranja", "blanco", "negro", "gris", "rosa",
-        "x", "oscuridad", "felicidad", "tristeza", "alegria", "risa", "llanto", "nieve", "invierno", "verano",
-        "primavera", "tecnologia", "miedo", "valentia", "amor", "odio", "esperanza", "affbsfb", "amistad", "suerte"};
-        
-    for(int i = 0; i < 100; i++) {
-        keysPredictAddWord(kw, hundredWordsDict[i]);
-    }
-
-    printf("Diccionario con 100 palabras:\n");
-    keysPredictPrint(kw);
-    
-    // Borrar la mitad de las palabras del diccionario
-    for(int i = 0; i < 50; i++) {
-        keysPredictRemoveWord(kw, hundredWordsDict[i]);
-    }
-
-    int cantidadPalabras;
+	// EJERCICIO 4
+	
+	// strLen
+	char* a = "";
+	char* b = "a";
+	char* c = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	
+	int aLen = strLen(a); // String vacio
+	int bLen = strLen(b); // String de un caracter
+	int cLen = strLen(c); // Todos los caracteres alfanumericos
+	
+	printf("El string \"%s\" mide %i\n", a, aLen);
+	printf("El string \"%s\" mide %i\n", b, bLen);
+	printf("El string \"%s\" mide %i\n", c, cLen);
+	
+	// strDup
+	char* aDup = strDup(a); // String vacio
+	char* bDup = strDup(b); // String de un caracter
+	char* cDup = strDup(c); // Todos los caracteres alfanumerico
+	
+	printf("strDup(\"%s\") = \"%s\"\n", a, aDup);
+	printf("strDup(\"%s\") = \"%s\"\n", b, bDup);
+	printf("strDup(\"%s\") = \"%s\"\n", c, cDup);
+	
+	// keysPredict casos chicos.
+	struct keysPredict* kt = keysPredictNew();
+	
+	// Armar un diccionar con las palabras ìalfajorî, ìcanoaî, ìrinoceronteî, ìcasaî y ìrinoî.
+	keysPredictAddWord(kt, "alfajor");
+	keysPredictAddWord(kt, "canoa");
+	keysPredictAddWord(kt, "rinoceronte");
+	keysPredictAddWord(kt, "casa");
+	keysPredictAddWord(kt, "rino");
+	
+	keysPredictPrint(kt);
+	
+	// Borrar la palabra ìcanoaî y agregar la palabra ìpatoî.
+	keysPredictRemoveWord(kt,"canoa");
+	keysPredictAddWord(kt, "pato");
+	keysPredictPrint(kt);
+	
+	// Predecir a partir ìcî, ìcaî, ìcasaî y ìcasasî.
+	predictAndPrintAll(kt,"c");
+	predictAndPrintAll(kt,"ca");
+	predictAndPrintAll(kt,"casa");
+	predictAndPrintAll(kt,"casas");
+	
+	keysPredictDelete(kt);
+	
+	// keysPredict casos grande.
+	struct keysPredict* kw = keysPredictNew();
+	
+	//Agregar 100 palabras a un diccionario
+	char* hundredWordsDict[] = {"gato", "perro", "cielo", "flor", "casa", "arbol", "camino", "cabeza", "corazon",
+		"dedo", "luz", "fuego", "agua", "tierra", "aire", "sol", "luna", "estrella", "bosque", "rio",
+		"nube", "lluvia", "trueno", "wacdwsd", "zanahorias", "oceano", "no", "hoja", "pluma", "lapiz",
+		"mano", "pie", "ojos", "nariz", "boca", "diente", "oreja", "espada", "escudo", "puerta",
+		"ventana", "pared", "techo", "suelo", "madera", "piedra", "metal", "acero", "oro", "plata",
+		"artificial", "river", "vehiculo", "rueda", "escribania", "cuerda", "sonido", "musica", "ritmo", "nota",
+		"arte", "pintura", "escultura", "danza", "cancion", "ciudad", "otorrinolaringologia", "pueblo", "calle", "parque",
+		"verde", "rojo", "azul", "amarillo", "violeta", "naranja", "blanco", "negro", "gris", "rosa",
+		"x", "oscuridad", "felicidad", "tristeza", "alegria", "risa", "llanto", "nieve", "invierno", "verano",
+		"primavera", "tecnologia", "miedo", "valentia", "amor", "odio", "esperanza", "affbsfb", "amistad", "suerte"};
+	
+	for(int i = 0; i < 100; i++) {
+		keysPredictAddWord(kw, hundredWordsDict[i]);
+	}
+	
+	printf("Diccionario con 100 palabras:\n");
+	keysPredictPrint(kw);
+	
+	// Borrar la mitad de las palabras del diccionario
+	for(int i = 0; i < 50; i++) {
+		keysPredictRemoveWord(kw, hundredWordsDict[i]);
+	}
+	
+	int cantidadPalabras;
 	printf("Borrar la mitad de las palabras.\n");
 	char** newDict = keysPredictListAll(kw, &cantidadPalabras);
 	printf("El diccionario ahora tiene %i palabras:\n", cantidadPalabras);
@@ -105,20 +106,21 @@ int main() {
 			printf("\n");
 		}
 	}
-    deleteArrayOfWords(newDict);
-
-    // Predecir todas las combinaciones posibles de prefijos de dos letras.
-    predictAndPrintAll(kw,"am");
-    predictAndPrintAll(kw,"fe");
-    predictAndPrintAll(kw,"gz");
-    predictAndPrintAll(kw,"ca");
-    predictAndPrintAll(kw,"po");
-    predictAndPrintAll(kw,"ve");
-    predictAndPrintAll(kw,"es");
-    predictAndPrintAll(kw,"ri");
-    predictAndPrintAll(kw,"ro");
-    
-    keysPredictDelete(kw);
-
-    return 0;
+	deleteArrayOfWords(newDict, cantidadPalabras);
+	
+	
+	// Predecir todas las combinaciones posibles de prefijos de dos letras.
+	predictAndPrintAll(kw,"am");
+	predictAndPrintAll(kw,"fe");
+	predictAndPrintAll(kw,"gz");
+	predictAndPrintAll(kw,"ca");
+	predictAndPrintAll(kw,"po");
+	predictAndPrintAll(kw,"ve");
+	predictAndPrintAll(kw,"es");
+	predictAndPrintAll(kw,"ri");
+	predictAndPrintAll(kw,"ro");
+	
+	keysPredictDelete(kw);
+	
+	return 0;
 }
