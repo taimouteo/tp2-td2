@@ -44,6 +44,10 @@ int main() {
 	printf("strDup(\"%s\") = \"%s\"\n", b, bDup);
 	printf("strDup(\"%s\") = \"%s\"\n", c, cDup);
 	
+	free(aDup);
+	free(bDup);
+	free(cDup);
+
 	// keysPredict casos chicos.
 	struct keysPredict* kt = keysPredictNew();
 	
