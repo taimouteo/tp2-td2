@@ -126,5 +126,16 @@ int main() {
 	
 	keysPredictDelete(kw);
 	
+	/*
+	EJERCICIO 5.
+	
+	A lo largo de la elaboracion del trabajo practico, intentamos no utilizar la IA para el desarrollo del codigo general (utils.c)
+	para comprender de mejor manera lo que el codigo hace y para proponer soluciones originales a los problemas a los que nos enfrentamos.
+	Lo poco que lo utilizamos fue para la generacion de codigo utilizado para testing, para verificar que el algoritmo elegido fuera valido y para
+	corregir errores sintacticos a medida que avanzabamos con el tp, sin la necesidad de compilar el codigo completo . Para el código principal, 
+	utilizamos solo en momentos donde no comprendiamos errores conceptuales que tenia el codigo. Ahí nos proporcionaba nuevas ideas las cuales aplicábamos
+	y modificabamos a nuestra manera, para luego ver si funcionaba mediante más tests.
+	*/
+	
 	return 0;
 }
