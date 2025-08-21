@@ -1,16 +1,17 @@
-El objetivo de este trabajo practico es implementar una estructura de datos que nos permita recorrer un diccionario de palabras de forma eficiente y con esto implementar funciones para predecir un conjunto posible de palabras en base a un prefijo.
+<title>School Project N°2: C Language</title>
+<body>
+The objective of this project is to implement a data structure that allows us to go through a dictionary of words efficiently and with this implement functions to predict a possible set of words based on a prefix.
 
-A partir de las siguientes estructuras se define una keysPredict:
-
+From the following structures, a keysPredict is defined:
+</body>
 <img width="521" height="123" alt="image" src="https://github.com/user-attachments/assets/a2226630-31c2-4fed-95fd-ab05f74237cb" />
-
-La estructura keysPredict, contiene un puntero a una lista de listas de nodos de tipo node. Cada nodo representa una letra indicada por el campo character. El campo next apunta a la siguiente letra dentro del mismo nivel, mientras que el campo down permite llegar a la siguiente lista de letras en un nivel inferior.
-Los campos end y word est an relacionados, ya que indican la palabra completa formada por los nodos desde el primero al ́ultimo. El campo end indica que ese nodo es nodo final de una palabra,
-mientras que word es un puntero a la palabra almacenada para ese nodo.
-Dentro de la estructura principal, además del puntero first, existen dos campos más. El campo totalKeys indica la cantidad total de letras dentro de la estructura, mientras que totalWords corresponde a la cantidad total de palabras almacenadas.
-A continuación se ilustra un ejemplo de la estructura:
-
+<body>
+The keysPredict structure contains a pointer to a list of node lists. Each node represents a letter indicated by the character field. The next field points to the next letter within the same level, while the down field allows you to reach the next list of letters at a lower level. The end and word fields are related, as they indicate the complete word formed by the nodes from the first to the last. The end field indicates that that node is the end node of a word, while word is a pointer to the word stored for that node.
+Within the main structure, in addition to the first pointer, there are two more fields. The totalKeys field indicates the total number of letters within the structure, while totalWords corresponds to the total number of words stored.
+An example of the structure is illustrated below:
+</body>
 <img width="643" height="305" alt="image" src="https://github.com/user-attachments/assets/00341f9a-bf6d-49b0-a751-30281a7a2caf" />
-
-En el ejemplo se puede observar como el primer nivel de la estructura est ́a compuesto por las letras 'a', 'b', 'c', 'l' y 'p'. Estas siempre son almacenadas en orden alfabetico dentro de la lista. Luego los punteros down van apuntando a las siguientes listas, algunas pueden tener un solo elemento como la que parte del primer nodo con una 'a', o pueden tener más elementos, como el siguiente puntero. Esta primera parte del la estructura logra almacenar las palabras 'ala' y 'ale'. Siendo la  ́ultima letra la ́unica diferente.
-Incluso, es posible tener palabras almacenadas en un nodo intermedio, como es el caso de la palabra 'lo', que un nodo m as abajo construye la palabra 'los'.
+<body>
+In the example you can see how the first level of the structure is composed of the letters 'a', 'b', 'c', 'l' and 'p'. These are always stored in alphabetical order within the list. Then the down pointers point to the following lists, some may have a single element like the one that starts from the first node with an 'a', or they can have more elements, such as the next pointer. This first part of the structure manages to store the words 'ala' and 'ale'. The last letter being the only different one.
+It is even possible to have words stored in an intermediate node, as is the case of the word 'lo', which a node further down constructs the word 'los'.
+</body>
